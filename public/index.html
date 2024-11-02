@@ -6,8 +6,33 @@
     <title>PingIt</title>
     <script defer src="/socket.io/socket.io.js"></script>
     <script defer src="./js/chat.js"></script>
+    <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    Chat App
+    <div id="chat-container">
+      <h2>PingIt - Chat App</h2>
+      <div id="messages"></div>
+
+      <form id="chat-form" action="">
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          required
+          placeholder="Enter your username" />
+
+        <label for="message">Message:</label>
+        <input
+          type="text"
+          id="message"
+          name="message"
+          required
+          placeholder="Type your message here" />
+
+        <button type="submit">Send</button>
+      </form>
+      <button id="send-location">Send location</button>
+    </div>
   </body>
 </html>

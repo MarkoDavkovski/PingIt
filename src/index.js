@@ -4,6 +4,7 @@ import config from "./config/config.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Server } from "socket.io";
+import { Filter } from "bad-words";
 
 const { port } = config;
 const app = express();
@@ -19,6 +20,34 @@ app.use(express.static(publicDirectoryPath));
 
 io.on("connection", (socket) => {
   console.log("New WebSocket connection");
+
+  socket.broadcast.emit("userConnected", {
+    message: "New user has been connected",
+  });
+
+  socket.on("sendMessage", ({ username, message }, callback) => {
+    const filter = new Filter();
+
+    if (filter.isProfane(message)) {
+      return callback("Profanity is not allowed");
+    }
+
+    io.emit("newMessage", { username, message });
+    callback();
+  });
+
+  socket.on("sendLocation", ({ latitude, longitude, username }, callback) => {
+    const locationURL = `https://google.com/maps?q=${latitude},${longitude}`;
+    io.emit("locationReceived", { username, locationURL });
+    callback();
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User has disconnected");
+    io.emit("userDisconnected", {
+      message: "A user has disconnected",
+    });
+  });
 });
 
 server.listen(port, () => {
