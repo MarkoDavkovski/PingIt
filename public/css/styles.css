@@ -1,3 +1,4 @@
+/* General Styling */
 * {
   margin: 0;
   padding: 0;
@@ -22,11 +23,13 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 #chat-container h2 {
   text-align: center;
   margin-bottom: 1rem;
 }
 
+/* Messages Styling */
 #messages {
   height: 300px;
   overflow-y: auto;
@@ -37,18 +40,43 @@ body {
   border: 1px solid #ddd;
 }
 
-#messages p {
+.message {
   padding: 8px;
   margin-bottom: 10px;
   background-color: #e0e0e0;
   border-radius: 5px;
 }
 
-#messages a {
-  color: #4a90e2;
-  text-decoration: underline;
+#messages .message:nth-child(odd) {
+  background-color: #e0e0e0;
 }
 
+#messages .message:nth-child(even) {
+  background-color: #d3d3d3;
+}
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.message-header strong {
+  color: #333;
+}
+
+.message-header span {
+  color: #777;
+  font-size: 0.85em;
+}
+
+/* Message Content */
+.message-body {
+  margin-top: 5px;
+  color: #333;
+}
+
+/* Form Styling */
 #chat-form {
   display: flex;
   flex-direction: column;

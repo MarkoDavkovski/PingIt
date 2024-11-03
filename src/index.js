@@ -25,20 +25,21 @@ io.on("connection", (socket) => {
     message: "New user has been connected",
   });
 
-  socket.on("sendMessage", ({ username, message }, callback) => {
+  socket.on("sendMessage", (data, callback) => {
     const filter = new Filter();
-
+    const { message } = data;
     if (filter.isProfane(message)) {
       return callback("Profanity is not allowed");
     }
 
-    io.emit("newMessage", { username, message });
+    io.emit("newMessage", data);
     callback();
   });
 
-  socket.on("sendLocation", ({ latitude, longitude, username }, callback) => {
+  socket.on("sendLocation", (data, callback) => {
+    const { latitude, longitude, username, createdAt } = data;
     const locationURL = `https://google.com/maps?q=${latitude},${longitude}`;
-    io.emit("locationReceived", { username, locationURL });
+    io.emit("locationReceived", { username, locationURL, createdAt });
     callback();
   });
 
