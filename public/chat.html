@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PingIt</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.13.0/qs.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="./js/chat.js"></script>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div id="chat-container">
+      <div id="sidebar">
+        <h3 id="room-name">Room: <span></span></h3>
+        <h4>Connected Users:</h4>
+        <ul id="users"></ul>
+      </div>
+      <div id="messages-container">
+        <h2>PingIt - Chat App</h2>
+        <div id="messages"></div>
+
+        <form id="chat-form" action="">
+          <label for="message">Message:</label>
+          <input
+            type="text"
+            id="message"
+            name="message"
+            required
+            autocomplete="off"
+            placeholder="Type your message here" />
+
+          <button type="submit">Send</button>
+        </form>
+        <button id="send-location">Send location</button>
+      </div>
+    </div>
+  </body>
+</html>

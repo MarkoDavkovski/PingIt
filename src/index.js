@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { Server } from "socket.io";
 import { Filter } from "bad-words";
+import { getUser, getUserInRoom, addUser, removeUser } from "./utils/users.js";
 
 const { port } = config;
 const app = express();
@@ -19,35 +20,56 @@ const publicDirectoryPath = path.join(__dirname, "../public");
 app.use(express.static(publicDirectoryPath));
 
 io.on("connection", (socket) => {
-  console.log("New WebSocket connection");
+  socket.on("userJoin", ({ username, room }, callback) => {
+    const { user, error } = addUser({ id: socket.id, username, room });
 
-  socket.broadcast.emit("userConnected", {
-    message: "New user has been connected",
+    if (error) return callback(error);
+    socket.join(user.room);
+
+    socket.broadcast.to(user.room).emit("userConnected", {
+      message: `${user.username} has joined the room`,
+    });
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUserInRoom(user.room),
+    });
+
+    callback();
   });
 
   socket.on("sendMessage", (data, callback) => {
+    const user = getUser(socket.id);
     const filter = new Filter();
     const { message } = data;
     if (filter.isProfane(message)) {
       return callback("Profanity is not allowed");
     }
 
-    io.emit("newMessage", data);
+    io.to(user.room).emit("newMessage", data);
     callback();
   });
 
   socket.on("sendLocation", (data, callback) => {
+    const user = getUser(socket.id);
     const { latitude, longitude, username, createdAt } = data;
     const locationURL = `https://google.com/maps?q=${latitude},${longitude}`;
-    io.emit("locationReceived", { username, locationURL, createdAt });
+    io.to(user.room).emit("locationReceived", {
+      username,
+      locationURL,
+      createdAt,
+    });
     callback();
   });
 
   socket.on("disconnect", () => {
-    console.log("User has disconnected");
-    io.emit("userDisconnected", {
-      message: "A user has disconnected",
-    });
+    const removedUser = removeUser(socket.id);
+
+    if (removedUser) {
+      io.to(removedUser.room).emit("roomData", {
+        room: removedUser.room,
+        users: getUserInRoom(removedUser.room),
+      });
+    }
   });
 });
 

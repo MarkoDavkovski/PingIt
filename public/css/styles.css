@@ -15,9 +15,35 @@ body {
   color: #333;
 }
 
+#sidebar {
+  width: 200px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-right: 1px solid #ddd;
+}
+
+#room-name {
+  margin-bottom: 10px;
+}
+
+#users {
+  list-style: none;
+  padding: 0;
+}
+
+#users li {
+  padding: 5px 0;
+}
+
+#messages-container {
+  flex: 1;
+  padding: 20px;
+}
+
 #chat-container {
+  display: flex;
   width: 90%;
-  max-width: 500px;
+  max-width: 900px;
   background-color: #ffffff;
   padding: 20px;
   border-radius: 10px;
@@ -28,7 +54,6 @@ body {
   text-align: center;
   margin-bottom: 1rem;
 }
-
 /* Messages Styling */
 #messages {
   height: 300px;
@@ -84,6 +109,7 @@ body {
 }
 
 #username,
+#room,
 #message {
   width: 100%;
   padding: 10px;
@@ -93,6 +119,7 @@ body {
 }
 
 #username:focus,
+#room:focus,
 #message:focus {
   border-color: #007bff;
 }
@@ -127,4 +154,7 @@ button:disabled,
   color: #666666;
   cursor: not-allowed;
   opacity: 0.6;
+}
+#room-name span {
+  color: #007bff;
 }

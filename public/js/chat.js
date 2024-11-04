@@ -9,11 +9,40 @@ const $chatFormButton = $chatForm.querySelector("button");
 
 const $locationButton = document.getElementById("send-location");
 
-socket.on("userConnected", ({ message }) => {
-  console.log(message);
+const $roomName = document.getElementById("room-name").querySelector("span");
+const $usersList = document.getElementById("users");
+
+//Options
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
 });
-socket.on("userDisconnected", ({ message }) => {
-  console.log(message);
+
+const autoScroll = () => {
+  const $newMessage = $messageContainer.lastElementChild;
+
+  if (!$newMessage) return;
+
+  requestAnimationFrame(() => {
+    const newMessageHeight = $newMessage.offsetHeight;
+    const visibleHeight = $messageContainer.offsetHeight;
+    const containerHeight = $messageContainer.scrollHeight;
+
+    const scrollOffset = $messageContainer.scrollTop + visibleHeight;
+
+    if (containerHeight - newMessageHeight <= scrollOffset + 10) {
+      $messageContainer.scrollTop = containerHeight;
+    }
+  });
+};
+socket.on("roomData", ({ room, users }) => {
+  $roomName.textContent = room;
+  $usersList.innerHTML = "";
+
+  users.forEach((user) => {
+    const li = document.createElement("li");
+    li.textContent = user.username;
+    $usersList.appendChild(li);
+  });
 });
 
 socket.on("newMessage", (data) => {
@@ -31,6 +60,7 @@ socket.on("newMessage", (data) => {
   `;
 
   $messageContainer.appendChild(msgElement);
+  autoScroll();
 });
 
 socket.on("locationReceived", (data) => {
@@ -38,10 +68,17 @@ socket.on("locationReceived", (data) => {
   const formattedTime = moment(createdAt).format("h:mm a");
 
   const locationElement = document.createElement("div");
-  locationElement.innerHTML = `<strong>${username}</strong>  <span>${formattedTime}</span>: <a href="${locationURL}" target="_blank">My location</a>`;
+
+  locationElement.innerHTML = `
+  <div class="message"> 
+    <div class="message-header">
+      <strong>${username}</strong> <span>${formattedTime}</span>
+    </div>
+    <div class="message-body"><a href="${locationURL}" target="_blank">My current location</a></div>
+  </div>`;
   $messageContainer.appendChild(locationElement);
 
-  $messageContainer.scrollTop = $messageContainer.scrollHeight;
+  autoScroll();
 });
 
 $chatForm.addEventListener("submit", (e) => {
@@ -49,7 +86,6 @@ $chatForm.addEventListener("submit", (e) => {
 
   $chatFormButton.setAttribute("disabled", "disabled");
 
-  const username = $usernameInput.value;
   const message = $messageInput.value;
   const createdAt = new Date().getTime();
 
@@ -61,7 +97,6 @@ $chatForm.addEventListener("submit", (e) => {
 
   socket.emit("sendMessage", data, (error) => {
     if (error) return console.error(error);
-    console.log("Delivered");
   });
 
   $chatFormButton.removeAttribute("disabled");
@@ -79,14 +114,12 @@ $locationButton.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const { latitude, longitude } = position.coords;
-      const username = $usernameInput.value;
       const createdAt = new Date().getTime();
       const data = { longitude, latitude, createdAt, username };
 
       socket.emit("sendLocation", data, () => {
         $locationButton.removeAttribute("disabled");
         $locationButton.textContent = "Send location";
-        console.log("Location shared");
       });
     },
     () => {
@@ -95,4 +128,11 @@ $locationButton.addEventListener("click", () => {
       alert("Unable to retrieve location.");
     }
   );
+});
+
+socket.emit("userJoin", { username, room }, (error) => {
+  if (error) {
+    alert(error);
+    location.href = "/";
+  }
 });
