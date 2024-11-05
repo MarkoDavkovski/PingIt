@@ -1,3 +1,24 @@
+:root {
+  --font-family: Arial, sans-serif;
+  --background-color: #f4f6f8;
+  --primary-color: #007bff;
+  --primary-color-hover: #0056b3;
+  --secondary-color: #28a745;
+  --secondary-color-hover: #218838;
+  --text-color: #333;
+  --light-text-color: #555;
+  --faded-text-color: #777;
+  --border-color: #ddd;
+  --light-background: #f1f1f1;
+  --message-background-odd: #e0e0e0;
+  --message-background-even: #d3d3d3;
+  --container-background: #ffffff;
+  --container-shadow: rgba(0, 0, 0, 0.1);
+  --border-radius: 5px;
+  --padding: 10px;
+  --gap: 10px;
+}
+
 /* General Styling */
 * {
   margin: 0;
@@ -6,20 +27,20 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f6f8;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  color: #333;
+  color: var(--text-color);
 }
 
 #sidebar {
   width: 200px;
-  background-color: #ffffff;
-  padding: 15px;
-  border-right: 1px solid #ddd;
+  background-color: var(--container-background);
+  padding: var(--padding);
+  border-right: 1px solid var(--border-color);
 }
 
 #room-name {
@@ -44,10 +65,10 @@ body {
   display: flex;
   width: 90%;
   max-width: 900px;
-  background-color: #ffffff;
+  background-color: var(--container-background);
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--container-shadow);
 }
 
 #chat-container h2 {
@@ -60,92 +81,92 @@ body {
   overflow-y: auto;
   margin-bottom: 20px;
   padding: 10px;
-  background-color: #f1f1f1;
+  background-color: var(--light-background);
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
 }
 
 .message {
   padding: 8px;
   margin-bottom: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
+  background-color: var(--message-background-odd);
+  border-radius: var(--border-radius);
 }
 
 #messages .message:nth-child(odd) {
-  background-color: #e0e0e0;
+  background-color: var(--message-background-odd);
 }
 
 #messages .message:nth-child(even) {
-  background-color: #d3d3d3;
+  background-color: var(--message-background-even);
 }
+
 .message-header {
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;
-  color: #555;
+  color: var(--light-text-color);
 }
 
 .message-header strong {
-  color: #333;
+  color: var(--text-color);
 }
 
 .message-header span {
-  color: #777;
+  color: var(--faded-text-color);
   font-size: 0.85em;
 }
-
 /* Message Content */
 .message-body {
   margin-top: 5px;
-  color: #333;
+  color: var(--text-color);
 }
 
 /* Form Styling */
 #chat-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--gap);
 }
 
 #username,
 #room,
 #message {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: var(--padding);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
   outline: none;
 }
 
 #username:focus,
 #room:focus,
 #message:focus {
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 button {
-  padding: 10px;
+  padding: var(--padding);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   color: #fff;
-  background-color: #007bff;
+  background-color: var(--primary-color);
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-color-hover);
 }
 
 #send-location {
   margin-top: 15px;
   width: 100%;
-  background-color: #28a745;
+  background-color: var(--secondary-color);
 }
 
 #send-location:hover {
-  background-color: #218838;
+  background-color: var(--secondary-color-hover);
 }
 
 button:disabled,
@@ -155,6 +176,7 @@ button:disabled,
   cursor: not-allowed;
   opacity: 0.6;
 }
+
 #room-name span {
-  color: #007bff;
+  color: var(--primary-color);
 }
